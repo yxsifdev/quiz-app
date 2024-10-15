@@ -1,0 +1,118 @@
+[
+    {
+        "frontend": [
+            {
+                "id": 1,
+                "question": "¿Qué lenguaje es el padre de los lenguajes de programación?",
+                "options": [
+                    "C#",
+                    "Python",
+                    "C",
+                    "Java"
+                ],
+                "answer": "C"
+            },
+            {
+                "id": 2,
+                "question": "¿Cuál es el lenguaje principal de desarrollo web en el lado del cliente?",
+                "options": [
+                    "HTML",
+                    "CSS",
+                    "JavaScript",
+                    "PHP"
+                ],
+                "answer": "JavaScript"
+            },
+            {
+                "id": 3,
+                "question": "¿Qué método se utiliza para acceder a un elemento de un array en JavaScript?",
+                "options": [
+                    "getElementById",
+                    "getElementsByClassName",
+                    "array[0]",
+                    "array.get(0)"
+                ],
+                "answer": "array[0]"
+            },
+            {
+                "id": 4,
+                "question": "¿Qué significa CSS?",
+                "options": [
+                    "Cascading Style Sheets",
+                    "Computer Style Sheets",
+                    "Colorful Style Sheets",
+                    "Creative Style Sheets"
+                ],
+                "answer": "Cascading Style Sheets"
+            },
+            {
+                "id": 5,
+                "question": "¿Qué propiedad se utiliza para cambiar el color de fondo en CSS?",
+                "options": [
+                    "background-color",
+                    "color",
+                    "bgcolor",
+                    "background"
+                ],
+                "answer": "background-color"
+            }
+        ],
+        "backend": [
+            {
+                "id": 1,
+                "question": "¿Qué es una API REST?",
+                "options": [
+                    "Un protocolo de transferencia de datos",
+                    "Un estilo arquitectónico para servicios web",
+                    "Un tipo de base de datos",
+                    "Un lenguaje de programación"
+                ],
+                "answer": "Un estilo arquitectónico para servicios web"
+            },
+            {
+                "id": 2,
+                "question": "¿Qué significa CRUD?",
+                "options": [
+                    "Crear, Leer, Actualizar, Eliminar",
+                    "Crear, Reducir, Actualizar, Descartar",
+                    "Crear, Leer, Unir, Destruir",
+                    "Colocar, Retirar, Unir, Destruir"
+                ],
+                "answer": "Crear, Leer, Actualizar, Eliminar"
+            },
+            {
+                "id": 3,
+                "question": "¿Qué es un servidor web?",
+                "options": [
+                    "Un lugar donde se almacenan archivos",
+                    "Un software que sirve páginas web a los usuarios",
+                    "Un lenguaje de programación",
+                    "Un sistema de gestión de bases de datos"
+                ],
+                "answer": "Un software que sirve páginas web a los usuarios"
+            },
+            {
+                "id": 4,
+                "question": "¿Qué es Node.js?",
+                "options": [
+                    "Un framework para frontend",
+                    "Un entorno de ejecución para JavaScript en el servidor",
+                    "Un sistema de gestión de bases de datos",
+                    "Un tipo de servidor web"
+                ],
+                "answer": "Un entorno de ejecución para JavaScript en el servidor"
+            },
+            {
+                "id": 5,
+                "question": "¿Qué es una base de datos NoSQL?",
+                "options": [
+                    "Una base de datos relacional",
+                    "Una base de datos que no usa SQL",
+                    "Un tipo de servidor web",
+                    "Un lenguaje de programación"
+                ],
+                "answer": "Una base de datos que no usa SQL"
+            }
+        ]
+    }
+]
