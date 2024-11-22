@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import programmingData from "@data/programming.json";
 import Puntaje from "@components/Puntaje.jsx";
 
 function BackEndQuiz() {
-  const questions = programmingData[0]?.backend;
+  const navigate = useNavigate();
+  const questions = programmingData[0]?.backend || [];
   const [selectedOptions, setSelectedOptions] = useState(
-    Array(questions.length).fill(null)
+    questions.length ? Array(questions.length).fill(null) : []
   );
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
@@ -13,22 +15,24 @@ function BackEndQuiz() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const savedScore = localStorage.getItem("backendQuizScore");
-    const savedAttempts = localStorage.getItem("backendQuizAttempts");
-    if (savedScore) {
-      setScore(JSON.parse(savedScore));
-    }
-    if (savedAttempts) {
-      setAttempts(JSON.parse(savedAttempts));
+    try {
+      const savedScore = localStorage.getItem("backendQuizScore");
+      const savedAttempts = localStorage.getItem("backendQuizAttempts");
+      if (savedScore) setScore(JSON.parse(savedScore));
+      if (savedAttempts) setAttempts(JSON.parse(savedAttempts));
+    } catch (e) {
+      console.error("Error loading from localStorage:", e);
     }
   }, []);
 
-  const handleOptionChange = (index, event) => {
-    const updatedOptions = [...selectedOptions];
-    updatedOptions[index] = event.target.value;
-    setSelectedOptions(updatedOptions);
+  const handleOptionChange = useCallback((index, event) => {
+    setSelectedOptions((prev) => {
+      const updatedOptions = [...prev];
+      updatedOptions[index] = event.target.value;
+      return updatedOptions;
+    });
     setError("");
-  };
+  }, []);
 
   const checkAnswers = () => {
     if (selectedOptions.includes(null)) {
@@ -36,56 +40,68 @@ function BackEndQuiz() {
       return;
     }
 
-    const totalScore = questions.reduce((score, question, index) => {
-      return selectedOptions[index] === question.answer ? score + 1 : score;
-    }, 0);
+    const totalScore = questions.reduce(
+      (acc, question, index) =>
+        selectedOptions[index] === question.answer ? acc + 1 : acc,
+      0
+    );
 
     setScore(totalScore);
+    setAttempts((prev) => {
+      const updatedAttempts = prev + 1;
+      localStorage.setItem("backendQuizAttempts", JSON.stringify(updatedAttempts));
+      return updatedAttempts;
+    });
+
     localStorage.setItem("backendQuizScore", JSON.stringify(totalScore));
-    const updatedAttempts = attempts + 1;
-    setAttempts(updatedAttempts);
-    localStorage.setItem(
-      "backendQuizAttempts",
-      JSON.stringify(updatedAttempts)
-    );
     setSubmitted(true);
   };
 
   const restartQuiz = () => {
     setSelectedOptions(Array(questions.length).fill(null));
     setSubmitted(false);
-    setScore(0);
     setError("");
   };
 
-  return (
-    <>
-      <div className="mb-5 text-4xl font-bold text-green-500">BackEndQuiz</div>
+  if (!questions.length) {
+    return <div className="text-center text-red-500 text-lg">No se encontraron preguntas para el cuestionario.</div>;
+  }
 
-      <div className="absolute top-5 right-5">
+  return (
+    <main className="min-h-screen bg-gray-800 text-white p-6 flex flex-col items-center">
+      <header className="w-full max-w-4xl mb-8">
+        <div className="flex justify-between items-center">
+          <h1 className="text-4xl font-bold text-green-400">BackEnd Quiz</h1>
+          <button
+            onClick={() => navigate("/games")}
+            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-md"
+          >
+            Volver hacia atras
+          </button>
+        </div>
         <Puntaje
           score={score}
           totalQuestions={questions.length}
           attempts={attempts}
         />
-      </div>
+      </header>
 
-      <section className="p-5 text-white bg-gray-900 rounded-lg shadow-md questions-backend">
+      <section className="w-full max-w-4xl bg-gray-900 rounded-lg shadow-lg p-6 space-y-6">
         {questions.map((question, index) => (
-          <div key={question.id} className="mb-4">
-            <h2 className="text-xl font-semibold">{question.question}</h2>
-            <ul className="pl-5 list-disc">
+          <div key={question.id} className="p-4 bg-gray-700 rounded-md">
+            <h2 className="text-lg font-semibold">{question.question}</h2>
+            <ul className="space-y-2 mt-3">
               {question.options.map((option, optionIndex) => (
-                <li key={optionIndex}>
+                <li key={optionIndex} className="flex items-center">
                   <input
                     type="radio"
                     name={`quiz-option-${index}`}
                     value={option}
                     checked={selectedOptions[index] === option}
                     onChange={(e) => handleOptionChange(index, e)}
-                    className="mr-2"
+                    className="mr-2 accent-green-400"
                   />
-                  {option}
+                  <label>{option}</label>
                 </li>
               ))}
             </ul>
@@ -93,26 +109,26 @@ function BackEndQuiz() {
         ))}
       </section>
 
-      <button
-        onClick={checkAnswers}
-        className="px-4 py-2 mt-4 text-white bg-blue-600 rounded hover:bg-blue-700"
-      >
-        Enviar Respuestas
-      </button>
+      <div className="mt-8 flex space-x-4">
+        <button
+          onClick={checkAnswers}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white"
+        >
+          Enviar Respuestas
+        </button>
 
-      {error && <p className="mt-2 text-red-500">{error}</p>}
-
-      {submitted && (
-        <div className="mt-5">
+        {submitted && (
           <button
             onClick={restartQuiz}
-            className="px-4 py-2 mt-4 text-white bg-red-600 rounded hover:bg-red-700"
+            className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white"
           >
             Intentar de nuevo
           </button>
-        </div>
-      )}
-    </>
+        )}
+      </div>
+
+      {error && <p className="mt-4 text-red-500">{error}</p>}
+    </main>
   );
 }
 
